@@ -11,9 +11,8 @@ const db = mysql.createConnection({
   database: "egpn",
 });
 
+// endpoint to get all players from the Players table
 app.get("/getplayers", (req, res) => {
-  // const tag = req.query.tag;
-
   const query = "SELECT * FROM Players";
 
   db.query(query, (err, result) => {
