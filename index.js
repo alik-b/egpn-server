@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const pool = require("./sql_conn.js");
 // const mysql = require("mysql2");
-// const cors = require("cors");
+const cors = require("cors");
 
-// app.use(cors());
+app.use(cors());
 // const db = mysql.createConnection({
 //   user: "root",
 //   host: "localhost",
