@@ -95,7 +95,7 @@ app.get(
     console.log("passed check tag");
 
     // check to see that tag exists inside call of duty player
-    const query = "SELECT * FROM Call_Of_Duty WHERE tag=$1";
+    const query = "SELECT * FROM Call_Of_Duty WHERE UPPER(tag) LIKE UPPER($1)";
     const values = [tag];
 
     pool
@@ -123,7 +123,7 @@ app.get(
     console.log("passed check tag exists in db");
     // Get the players who have a higher KD than the tag
     const query = `SELECT * FROM Call_Of_Duty WHERE
-                   kd > (SELECT kd FROM Call_Of_Duty WHERE tag=$1)`;
+                   kd > (SELECT kd FROM Call_Of_Duty WHERE UPPER(tag) LIKE UPPER($1))`;
 
     const values = [req.params.tag];
 
