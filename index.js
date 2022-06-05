@@ -225,10 +225,9 @@ app.get(
                   FROM Apex_Playoff_Players
                   GROUP BY team
                   HAVING SUM(player_kills) > ANY (SELECT SUM(player_kills)
-                                                  FROM
-                                                  Apex_Playoff_Players
+                                                  FROM Apex_Playoff_Players
                                                   GROUP BY team
-                                                  HAVING team = $1)`;
+                                                  HAVING UPPER(team) = UPPER($1))`;
 
     const values = [req.params.team];
 
