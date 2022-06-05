@@ -194,7 +194,7 @@ app.get(
     console.log("passed check team");
 
     // check to see that team exists inside apex_playoff_players
-    const query = "SELECT * FROM Apex_Playoff_Players WHERE UPPER(team) LIKE ($1)";
+    const query = "SELECT * FROM Apex_Playoff_Players WHERE UPPER(team) LIKE UPPER($1)";
     const values = [team];
 
     pool
