@@ -178,6 +178,76 @@ app.get("/apexlegends", (req, res) => {
   //   res.send(result);
   // });
 });
+// as of 6/4/22 changes
+app.get(
+  "/apexlegends/:team",
+  (req, res, next) => {
+    const team = req.params.team;
+
+    if (!team) {
+      res.status(400).send({
+        message: "Missing required information.",
+      });
+      return;
+    }
+
+    console.log("passed check team");
+
+    // check to see that team exists inside apex_playoff_players
+    const query = "SELECT * FROM Apex_Playoff_Players WHERE UPPER(team) LIKE ($1)";
+    const values = [team];
+
+    pool
+      .query(query, values)
+      .then((result) => {
+        if (result.rowCount == 0) {
+          res.status(404).send({
+            message: "Team not found",
+          });
+          return;
+        }
+
+        next();
+      })
+      .catch((err) => {
+        console.log("error: " + err);
+        res.status(400).send({
+          message: "SQL ERROR on checking if team exists.",
+          error: err,
+        });
+        return;
+      });
+  },
+  (req, res) => {
+    console.log("passed check team exists in db");
+    // Get the team with higher kills than input Team
+    const query = `SELECT team, SUM(player_kills) AS team_kills
+                  FROM Apex_Playoff_Players
+                  GROUP BY team
+                  HAVING SUM(player_kills) > ANY (SELECT SUM(player_kills)
+                                                  FROM
+                                                  Apex_Playoff_Players
+                                                  HAVING team = $1)`;
+
+    const values = [req.params.team];
+
+    pool
+      .query(query, values)
+      .then((result) => {
+        res.send({
+          success: true,
+          result: result.rows,
+        });
+      })
+      .catch((err) => {
+        console.log("error: " + err);
+        res.status(400).send({
+          message: "SQL ERROR on getting teams who have a higher kd than team",
+          error: err,
+        });
+        return;
+      });
+  },
 
 // endpoint to get all players from the League of Legends table
 app.get("/leagueoflegends", (req, res) => {
@@ -212,7 +282,7 @@ app.get("/leagueoflegends", (req, res) => {
   //   console.log("success");
   //   res.send(result);
   // });
-});
+}));
 
 // endpoint to get all players from the League of Legends table
 app.get("/leagueoflegends/:avgtype", (req, res) => {
