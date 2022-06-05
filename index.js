@@ -218,7 +218,8 @@ app.get("/leagueoflegends", (req, res) => {
 app.get("/leagueoflegends/:avgtype", (req, res) => {
   const column = req.params.avgtype;
 
-  const query = `SELECT team, ROUND(AVG(${column}), 2) FROM League_Of_Legends NATURAL JOIN Players GROUP BY team`;
+  const query = `SELECT team, ROUND(AVG(${column}), 2) AS avg \
+  FROM League_Of_Legends NATURAL JOIN Players GROUP BY team ORDER BY avg DESC`;
   console;
 
   pool
