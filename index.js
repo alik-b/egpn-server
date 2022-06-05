@@ -181,7 +181,9 @@ app.get("/apexlegends", (req, res) => {
 
 // endpoint to get all players from the League of Legends table
 app.get("/leagueoflegends", (req, res) => {
-  const query = "SELECT * FROM League_Of_Legends";
+  const query =
+    "SELECT tag, team, wins, losses, total_kills, total_deaths, \
+  total_assists FROM League_Of_Legends NATURAL JOIN Players";
 
   pool
     .query(query)
@@ -210,6 +212,32 @@ app.get("/leagueoflegends", (req, res) => {
   //   console.log("success");
   //   res.send(result);
   // });
+});
+
+// endpoint to get all players from the League of Legends table
+app.get("/leagueoflegends/:avgtype", (req, res) => {
+  const column = req.params.avgtype;
+
+  const query = `SELECT team, ROUND(AVG(${column}), 2) FROM League_Of_Legends NATURAL JOIN Players GROUP BY team`;
+  console;
+
+  pool
+    .query(query)
+    .then((result) => {
+      console.log("success");
+      res.send({
+        success: true,
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      console.log("error: " + err);
+      res.status(400).send({
+        message: "SQL ERROR",
+        error: err,
+      });
+      return;
+    });
 });
 
 // endpoint to get all players from the Rocket League table
