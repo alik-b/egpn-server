@@ -399,6 +399,32 @@ app.get("/valorant", (req, res) => {
       return;
     });
 
+    // order table by stat
+    app.get("/valorant/:orderBy", (req, res) => {
+      const column = req.params.orderBy;
+    
+      const query = 'SELECT * FROM VALORANT ORDER BY $1 desc';
+      //console;
+    
+      pool
+        .query(query)
+        .then((result) => {
+          console.log("success");
+          res.send({
+            success: true,
+            result: result.rows,
+          });
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+          res.status(400).send({
+            message: "SQL ERROR",
+            error: err,
+          });
+          return;
+        });
+    });
+
   // db.query(query, (err, result) => {
   //   if (err) {
   //     console.log("error: " + err);
