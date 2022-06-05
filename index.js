@@ -376,6 +376,39 @@ app.get("/siege", (req, res) => {
   //   res.send(result);
   // });
 });
+// endpoint to find the highest KPR per team
+app.get("/siege/:max", (req, res) => {
+  const column = req.params.max;
+  const query = `SELECT team, MAX(${column}) FROM Siege NATURAL JOIN Players GROUP BY team`;
+
+  pool
+    .query(query)
+    .then((result) => {
+      console.log("success");
+      res.send({
+        success: true,
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      console.log("error: " + err);
+      res.status(400).send({
+        message: "SQL ERROR",
+        error: err,
+      });
+      return;
+    });
+
+  // db.query(query, (err, result) => {
+  //   if (err) {
+  //     console.log("error: " + err);
+  //     res.send(err);
+  //     return;
+  //   }
+  //   console.log("success");
+  //   res.send(result);
+  // });
+});
 
 // endpoint to get all players from the Valorant table
 app.get("/valorant", (req, res) => {
