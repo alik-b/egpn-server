@@ -471,10 +471,8 @@ app.get("/valorant", (req, res) => {
       const column = req.params.orderByStat;
       const query = `SELECT * FROM Valorant ORDER BY ${column} desc`;
       //console;
-      const values = [column];
-    
       pool
-        .query(query, values)
+        .query(query)
         .then((result) => {
           console.log("success");
           res.send({
