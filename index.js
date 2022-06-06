@@ -469,7 +469,7 @@ app.get("/valorant", (req, res) => {
     app.get("/valorant/:orderBy", (req, res) => {
       const column = req.params.orderBy;
     
-      const query = 'SELECT * FROM VALORANT ORDER BY $1 desc';
+      const query = 'SELECT * FROM Valorant ORDER BY $1 desc';
       //console;
     
       pool
