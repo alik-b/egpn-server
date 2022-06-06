@@ -194,7 +194,8 @@ app.get(
     console.log("passed check team");
 
     // check to see that team exists inside apex_playoff_players
-    const query = "SELECT * FROM Apex_Playoff_Players WHERE UPPER(team) LIKE UPPER($1)";
+    const query =
+      "SELECT * FROM Apex_Playoff_Players WHERE UPPER(team) LIKE UPPER($1)";
     const values = [team];
 
     pool
@@ -250,40 +251,41 @@ app.get(
       });
   },
 
-// endpoint to get all players from the League of Legends table
-app.get("/leagueoflegends", (req, res) => {
-  const query =
-    "SELECT tag, team, wins, losses, total_kills, total_deaths, \
-  total_assists FROM League_Of_Legends NATURAL JOIN Players";
+  // endpoint to get all players from the League of Legends table
+  app.get("/leagueoflegends", (req, res) => {
+    const query =
+      "SELECT tag, team, wins, losses, total_kills, total_deaths, \
+  total_assists FROM League_Of_Legends NATURAL JOIN Players ORDER BY team";
 
-  pool
-    .query(query)
-    .then((result) => {
-      console.log("success");
-      res.send({
-        success: true,
-        result: result,
+    pool
+      .query(query)
+      .then((result) => {
+        console.log("success");
+        res.send({
+          success: true,
+          result: result,
+        });
+      })
+      .catch((err) => {
+        console.log("error: " + err);
+        res.status(400).send({
+          message: "SQL ERROR",
+          error: err,
+        });
+        return;
       });
-    })
-    .catch((err) => {
-      console.log("error: " + err);
-      res.status(400).send({
-        message: "SQL ERROR",
-        error: err,
-      });
-      return;
-    });
 
-  // db.query(query, (err, result) => {
-  //   if (err) {
-  //     console.log("error: " + err);
-  //     res.send(err);
-  //     return;
-  //   }
-  //   console.log("success");
-  //   res.send(result);
-  // });
-}));
+    // db.query(query, (err, result) => {
+    //   if (err) {
+    //     console.log("error: " + err);
+    //     res.send(err);
+    //     return;
+    //   }
+    //   console.log("success");
+    //   res.send(result);
+    // });
+  })
+);
 
 // endpoint to get all players from the League of Legends table
 app.get("/leagueoflegends/:avgtype", (req, res) => {
@@ -466,29 +468,28 @@ app.get("/valorant", (req, res) => {
       return;
     });
 
-    // order table by stat
-    app.get("/valorant/:orderByStat", (req, res) => {
-      const column = req.params.orderByStat;
-      const query = `SELECT * FROM Valorant ORDER BY ${column} desc`;
-      //console;
-      pool
-        .query(query)
-        .then((result) => {
-          console.log("success");
-          res.send({
-            success: true,
-            result: result.rows,
-          });
-        })
-        .catch((err) => {
-          console.log("error: " + err);
-          res.status(400).send({
-            message: "SQL ERROR",
-            error: err,
-          });
-          return;
+  // order table by stat
+  app.get("/valorant/:orderByStat", (req, res) => {
+    const column = req.params.orderByStat;
+    const query = `SELECT * FROM Valorant ORDER BY ${column} desc`;
+    pool
+      .query(query)
+      .then((result) => {
+        console.log("success");
+        res.send({
+          success: true,
+          result: result.rows,
         });
-    });
+      })
+      .catch((err) => {
+        console.log("error: " + err);
+        res.status(400).send({
+          message: "SQL ERROR",
+          error: err,
+        });
+        return;
+      });
+  });
 
   // db.query(query, (err, result) => {
   //   if (err) {
