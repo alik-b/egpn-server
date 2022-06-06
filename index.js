@@ -467,13 +467,14 @@ app.get("/valorant", (req, res) => {
     });
 
     // order table by stat
-    app.get("/valorant/:orderBy", (req, res) => {
-      const column = req.params.orderBy;
+    app.get("/valorant/:orderByStat", (req, res) => {
+      const column = req.params.orderByStat;
       const query = 'SELECT * FROM Valorant ORDER BY $1 desc';
       //console;
+      const values = [column];
     
       pool
-        .query(query)
+        .query(query, values)
         .then((result) => {
           console.log("success");
           res.send({
