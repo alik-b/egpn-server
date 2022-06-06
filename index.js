@@ -218,6 +218,7 @@ app.get(
         return;
       });
   },
+
   (req, res) => {
     console.log("passed check team exists in db");
     // Get the team with higher kills than input Team
@@ -468,7 +469,6 @@ app.get("/valorant", (req, res) => {
     // order table by stat
     app.get("/valorant/:orderBy", (req, res) => {
       const column = req.params.orderBy;
-    
       const query = 'SELECT * FROM Valorant ORDER BY $1 desc';
       //console;
     
